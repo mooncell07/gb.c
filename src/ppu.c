@@ -77,7 +77,7 @@ void isWindowEnabled() {
 
 SDL_Color getTileColor(uint8_t colorCode) {
     return searchColor(getLCDC(BGANDWINEN) ? colorCode
-                                           : BEXTR(ioRegs.BGP, 0, 1));
+                                           : 0);
 }
 
 bool checkStatInt(uint8_t v) { return BT(ioRegs.STAT, v); }
