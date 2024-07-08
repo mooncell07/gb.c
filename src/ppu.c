@@ -66,18 +66,13 @@ void isWindowEnabled() {
     if (ioRegs.LY == ioRegs.WY) {
         windowTrigger = true;
     }
-    uint8_t saturatedWX = ioRegs.WX - 7;
-    if (ioRegs.WX <= 6) {
-        saturatedWX = 0;
-    }
     f.isWindowVisible = getLCDC(WINEN) && windowTrigger &&
-                        (ioRegs.LX >= saturatedWX) &&
-                        BOUND(ioRegs.WY, 0, 143) && (saturatedWX <= 159);
+                        (ioRegs.LX + 7 >= ioRegs.WX) &&
+                        BOUND(ioRegs.WY, 0, 143);
 }
 
 SDL_Color getTileColor(uint8_t colorCode) {
-    return searchColor(getLCDC(BGANDWINEN) ? colorCode
-                                           : 0);
+    return searchColor(getLCDC(BGANDWINEN) ? colorCode : 0);
 }
 
 bool checkStatInt(uint8_t v) { return BT(ioRegs.STAT, v); }
@@ -156,7 +151,8 @@ void ppuTick() {
                 if (windowInit) {
                     fetchWindow(&f);
                     windowInit = false;
-                    if (ioRegs.WX <= 6 && ioRegs.WX > 0) {
+                    dropPixels = 0;
+                    if (ioRegs.WX < 7){
                         dropPixels = 7 - ioRegs.WX;
                     }
                     return;

@@ -212,11 +212,7 @@ void fetchBackground(Fetcher *f) {
 }
 
 void fetchWindow(Fetcher *f) {
-    uint8_t saturatedWX = ioRegs.WX - 7;
-    if (ioRegs.WX <= 6 && ioRegs.WX > 0) {
-        saturatedWX = ioRegs.WX;
-    }
-    fetchMain(f, (uint16_t)((ioRegs.LX - saturatedWX) / 8) & 0x1F);
+    fetchMain(f, ((ioRegs.WLY / 8) * 32) & 0x1F);
 }
 
 void clearSpriteFetcher() {
