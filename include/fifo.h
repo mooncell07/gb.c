@@ -39,39 +39,39 @@ typedef struct {
 
 #define _GETITEM(buffer) buffer->entries[buffer->base.head]
 
-#define _popItem(buffer, container)                                         \
-    if (buffer->base.ptr == 0) {                                            \
-        logState(FATAL, "(_popItem) FIFO is empty.");                       \
-    } else {                                                                \
-        container = &_GETITEM(buffer);                                      \
-        buffer->base.head = (buffer->base.head + 1) % buffer->base.maxSize; \
-        buffer->base.ptr--;                                                 \
+#define _popItem(buffer, container)                                            \
+    if (buffer->base.ptr == 0) {                                               \
+        logState(FATAL, "(_popItem) FIFO is empty.");                          \
+    } else {                                                                   \
+        container = &_GETITEM(buffer);                                         \
+        buffer->base.head = (buffer->base.head + 1) % buffer->base.maxSize;    \
+        buffer->base.ptr--;                                                    \
     }
 
-#define _getItemAt(buffer, container, idx)                                    \
-    if (idx < 0 || idx >= buffer->base.maxSize) {                             \
-        logState(FATAL, "(_getItemAt) Index is out of bounds.");              \
-    } else {                                                                  \
-        container =                                                           \
-            &buffer                                                           \
-                 ->entries[(buffer->base.head + idx) % buffer->base.maxSize]; \
+#define _getItemAt(buffer, container, idx)                                     \
+    if (idx < 0 || idx >= buffer->base.maxSize) {                              \
+        logState(FATAL, "(_getItemAt) Index is out of bounds.");               \
+    } else {                                                                   \
+        container =                                                            \
+            &buffer                                                            \
+                 ->entries[(buffer->base.head + idx) % buffer->base.maxSize];  \
     }
 
-#define setEntryAt(buffer, idx, entry)                                   \
-    if (idx < 0 || idx >= buffer.base.maxSize) {                         \
-        logState(DEBUG, "(setEntryAt) Index is out of bounds.");         \
-    } else {                                                             \
-        buffer.entries[(buffer.base.head + idx) % buffer.base.maxSize] = \
-            entry;                                                       \
+#define setEntryAt(buffer, idx, entry)                                         \
+    if (idx < 0 || idx >= buffer.base.maxSize) {                               \
+        logState(DEBUG, "(setEntryAt) Index is out of bounds.");               \
+    } else {                                                                   \
+        buffer.entries[(buffer.base.head + idx) % buffer.base.maxSize] =       \
+            entry;                                                             \
     }
 
-#define pushEntry(buffer, entry)                                         \
-    if (buffer.base.ptr >= buffer.base.maxSize) {                        \
-        logState(DEBUG, "(pushEntry) FIFO is FULL");                     \
-    } else {                                                             \
-        buffer.entries[buffer.base.tail] = entry;                        \
-        buffer.base.tail = (buffer.base.tail + 1) % buffer.base.maxSize; \
-        buffer.base.ptr++;                                               \
+#define pushEntry(buffer, entry)                                               \
+    if (buffer.base.ptr >= buffer.base.maxSize) {                              \
+        logState(DEBUG, "(pushEntry) FIFO is FULL");                           \
+    } else {                                                                   \
+        buffer.entries[buffer.base.tail] = entry;                              \
+        buffer.base.tail = (buffer.base.tail + 1) % buffer.base.maxSize;       \
+        buffer.base.ptr++;                                                     \
     }
 
 Pixel _popPixelFIFO(PixelFIFO *buffer);
@@ -81,12 +81,10 @@ Sprite _getSpriteAt(SpriteBuffer *buffer, int idx);
 int FIFOLen(FIFOBase *base);
 void clearFIFO(FIFOBase *base);
 
-#define getEntryAt(T, buffer, idx)       \
-    _Generic((T), PixelFIFO              \
-             : _getPixelAt, SpriteBuffer \
-             : _getSpriteAt)(buffer, idx)
+#define getEntryAt(T, buffer, idx)                                             \
+    _Generic((T), PixelFIFO: _getPixelAt, SpriteBuffer: _getSpriteAt)(buffer,  \
+                                                                      idx)
 
-#define popEntry(T, buffer)                \
-    _Generic((T), PixelFIFO                \
-             : _popPixelFIFO, SpriteBuffer \
-             : _popSpriteBuffer)(buffer)
+#define popEntry(T, buffer)                                                    \
+    _Generic((T), PixelFIFO: _popPixelFIFO, SpriteBuffer: _popSpriteBuffer)(   \
+        buffer)

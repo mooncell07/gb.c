@@ -1,17 +1,25 @@
 #pragma once
+#include <mappers.h>
 #include <stdint.h>
 
-typedef struct {
+typedef struct CartridgeHeaders {
     char title[60];
     char licensee[60];
     char romType[60];
     int romSize;
-    uint8_t romVer;
+    uint8_t romVersion;
     uint8_t destinationCode;
     uint8_t checksum;
 } CartridgeHeaders;
 
-uint8_t romRead(uint16_t address);
-void romWrite(uint16_t address, uint8_t data);
-void newRom(char filepath[]);
-void freeMemory();
+typedef struct Cartridge {
+    CartridgeHeaders cartridgeHeaders;
+    Mapper mapper;
+
+} Cartridge;
+
+uint8_t romRead(Cartridge *, uint16_t);
+void romWrite(Cartridge *, uint16_t, uint8_t);
+
+Cartridge *createCartridge(char[]);
+void destroyCartridge(Cartridge *);

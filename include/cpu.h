@@ -1,12 +1,18 @@
 #pragma once
+#include <bus.h>
 #include <stdbool.h>
 #include <stdint.h>
 
-void getSerialOutput();
-void checkPendingIRQs();
-void cpuTick();
+typedef struct CPU {
+  Bus *bus;
+  uint8_t opcode;
+  bool halted;
+  bool IME;
+  bool IMERising;
+} CPU;
 
-extern uint8_t opcode;
-extern bool halted;
-extern bool IME;
-extern bool IMERising;
+CPU createCPU(Bus *);
+void destroyCPU(CPU *);
+void getSerialOutput(CPU *);
+void checkPendingIRQs(CPU *);
+void cpuTick(CPU *);

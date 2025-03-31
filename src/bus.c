@@ -1,13 +1,15 @@
 
+#include "bus.h"
 #include <stdbool.h>
 #include <stdint.h>
 
 #include "cartridge.h"
-#include "io.h"
-#include "mmu.h"
-#include "timer.h"
+#include "clock.h"
+#include "mappers.h"
+#include "mmio.h"
 #include "utils.h"
 #include "vbus.h"
+#include <stdlib.h>
 
 typedef struct {
     bool active;
@@ -17,19 +19,30 @@ typedef struct {
     uint8_t initialDelay;
 } DMA;
 
-void dma_tick(DMA *d);
+void dma_tick(Bus *bus, DMA *d);
 DMA dma = {0};
 
-void busCycle(bool incr) {
+Bus *createBus(Clock *clock, MMIO *mmio, Cartridge *cart) {
+    Bus *bus = malloc(sizeof(Bus));
+    bus->clock = clock;
+    bus->mmio = mmio;
+    bus->cart = cart;
+
+    return bus;
+}
+
+void destroyBus(Bus *bus) { free(bus); }
+
+void busCycle(Bus *self, bool incr) {
     if (!incr) {
         return;
     }
 
     if (dma.active) {
-        dma_tick(&dma);
+        dma_tick(self, &dma);
     }
 
-    incCycle(1);
+    tickComponents(self->clock, 1);
 
     if (dma.starting) {
         if (dma.initialDelay > 1) {
@@ -41,24 +54,25 @@ void busCycle(bool incr) {
     }
 }
 
-uint8_t readByte(uint16_t address, bool incr, bool conflict) {
+uint8_t readByte(Bus *self, uint16_t address, bool incr, bool conflict) {
     uint8_t result = 0;
     if (dma.active && !conflict && address >= 0xFE00) {
-        return wram[(address - 0xFE00) + 0x1E00];
+        return self->cart->mapper.wram[(address - 0xFE00) + 0x1E00];
     }
 
     else if ((address <= 0x7FFF) || BOUND(address, 0xA000, 0xBFFF)) {
-        if (ioRegs.booting && (address <= 0x00FF)) {
-            result = bootRom[address];
+        if (self->mmio->booting && (address <= 0x00FF)) {
+
+            result = self->cart->mapper.bootRom[address];
         } else {
-            result = romRead(address);
+            result = romRead(self->cart, address);
         }
     } else if (BOUND(address, 0x8000, 0x9FFF)) {
         result = ppuReadByte(address, false);
     } else if (BOUND(address, 0xC000, 0xDFFF)) {
-        result = wram[address - 0xC000];
+        result = self->cart->mapper.wram[address - 0xC000];
     } else if (BOUND(address, 0xE000, 0xFDFF)) {
-        result = wram[address - 0xE000];
+        result = self->cart->mapper.wram[address - 0xE000];
     } else if (BOUND(address, 0xFE00, 0xFE9F)) {
         if (dma.active && conflict) {
             result = 0xFF;
@@ -66,20 +80,20 @@ uint8_t readByte(uint16_t address, bool incr, bool conflict) {
             result = ppuReadByte(address, true);
         }
     } else if (BOUND(address, 0xFF00, 0xFF7F)) {
-        result = getIoReg(address & 0xFF);
+        result = getRegister(self->mmio, address & 0xFF);
     } else if (BOUND(address, 0xFF80, 0xFFFE)) {
-        result = hram[address - 0xFF80];
+        result = self->cart->mapper.hram[address - 0xFF80];
     } else if (address == 0xFFFF) {
-        result = ioRegs.IE;
+        result = self->mmio->IE;
     }
 
-    busCycle(incr);
+    busCycle(self, incr);
     return result;
 }
 
-void writeByte(uint16_t address, uint8_t data, bool incr) {
+void writeByte(Bus *self, uint16_t address, uint8_t data, bool incr) {
     if ((address <= 0x7FFF) || BOUND(address, 0xA000, 0xBFFF)) {
-        romWrite(address, data);
+        romWrite(self->cart, address, data);
     }
 
     else if (BOUND(address, 0x8000, 0x9FFF)) {
@@ -87,38 +101,39 @@ void writeByte(uint16_t address, uint8_t data, bool incr) {
     }
 
     else if (BOUND(address, 0xC000, 0xDFFF)) {
-        wram[address - 0xC000] = data;
+        self->cart->mapper.wram[address - 0xC000] = data;
     } else if (BOUND(address, 0xE000, 0xFDFF)) {
-        wram[address - 0xE000] = data;
+        self->cart->mapper.wram[address - 0xE000] = data;
     } else if (BOUND(address, 0xFE00, 0xFE9F)) {
         ppuWriteByte(address, data, true);
     }
 
     else if (BOUND(address, 0xFF00, 0xFF7F)) {
-        setIoReg(address & 0xFF, data);
+        setRegister(self->mmio, address & 0xFF, data);
         if (address == 0xFF46) {
             dma.starting = true;
             dma.initialDelay = 2;
         }
     } else if (BOUND(address, 0xFF80, 0xFFFE)) {
-        hram[address - 0xFF80] = data;
+        self->cart->mapper.hram[address - 0xFF80] = data;
     } else if (address == 0xFFFF) {
-        ioRegs.IE = data;
+        self->mmio->IE = data;
     }
 
-    busCycle(incr);
+    busCycle(self, incr);
 }
 
-void writeWord(uint16_t address, uint16_t data) {
-    writeByte(address, LSB(data), true);
-    writeByte(address + 1, MSB(data), true);
+void writeWord(Bus *self, uint16_t address, uint16_t data) {
+    writeByte(self, address, LSB(data), true);
+    writeByte(self, address + 1, MSB(data), true);
 }
 
-void internal() { busCycle(true); }
+void internal(Bus *self) { busCycle(self, true); }
 
-void dma_tick(DMA *d) {
-    uint16_t addr = (uint16_t)ioRegs.DMA << 8;
-    d->currentByte = readByte(addr + (uint16_t)d->currentIndex, false, false);
+void dma_tick(Bus *bus, DMA *d) {
+    uint16_t addr = (uint16_t)bus->mmio->DMA << 8;
+    d->currentByte =
+        readByte(bus, addr + (uint16_t)d->currentIndex, false, false);
     ppuWriteByte(0xFE00 + (uint16_t)d->currentIndex, d->currentByte, true);
     d->currentIndex++;
 

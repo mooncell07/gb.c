@@ -1,0 +1,9 @@
+{
+    "name": "gbc",
+    "builtin-baseline": "782ccc18d8b819cdef6794a6c03eb3d9f7cd04aa",
+    "description": "Gameboy Emulator",
+    "version-string": "1.0",
+    "dependencies": [
+        "sdl3"
+    ]
+}

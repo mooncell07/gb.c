@@ -4,3 +4,4 @@ build/
 tests/
 
 compile_commands.json
+vcpkg_installed/

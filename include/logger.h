@@ -3,4 +3,4 @@
 #include "types.h"
 
 extern bool RUNNING;
-void logState(LogLevel ll, const char *message);
+void logState(LogLevel, const char *);

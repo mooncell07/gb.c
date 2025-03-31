@@ -1,4 +1,5 @@
 #pragma once
+#include <SDL3/SDL.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -10,6 +11,6 @@ typedef struct {
 
 extern JoypadState js;
 
-void unsetKey(int key);
-void setKey(int key);
+void unsetKeyBit(SDL_Keycode);
+void setKeyBit(SDL_Keycode);
 void setKeyMask();

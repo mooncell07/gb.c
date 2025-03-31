@@ -1,12 +1,13 @@
 #pragma once
 
+#include "fifo.h"
+#include "mmio.h"
+#include <SDL3/SDL.h>
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "SDL2/SDL.h"
-#include "fifo.h"
-
 typedef struct {
+    MMIO *mmio;
     uint8_t fetcherState;
     uint8_t spriteState;
 
@@ -26,18 +27,20 @@ typedef struct {
     uint8_t spriteSlice[8];
     Sprite currSprite;
 
+    PixelFIFO tFIFO;
+    PixelFIFO sFIFO;
+    SpriteBuffer sprites;
+
 } Fetcher;
 
-extern Fetcher f;
-extern PixelFIFO tFIFO;
-extern PixelFIFO sFIFO;
-extern SpriteBuffer sprites;
+Fetcher *createFetcher(MMIO *);
+void destroyFetcher(Fetcher *);
 
-uint8_t getColorIndex(uint8_t code, bool obj, bool palette1);
-SDL_Color searchColor(uint8_t colorIndex);
-void tileTick(Fetcher *f);
-void spriteTick(Fetcher *f);
-void fetchMain(Fetcher *f, uint16_t xPos);
-void fetchBackground(Fetcher *f);
-void fetchWindow(Fetcher *f);
-void clearSpriteFetcher();
+uint8_t getColorIndex(Fetcher *, uint8_t, bool, bool);
+SDL_Color searchColor(uint8_t);
+void tileTick(Fetcher *);
+void spriteTick(Fetcher *);
+void fetchMain(Fetcher *, uint16_t);
+void fetchBackground(Fetcher *);
+void fetchWindow(Fetcher *);
+void clearSpriteFetcher(Fetcher *);

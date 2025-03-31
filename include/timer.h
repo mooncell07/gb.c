@@ -1,3 +1,4 @@
 #pragma once
+#include <mmio.h>
 
-void incCycle(int m);
+void timerTick(MMIO *);
