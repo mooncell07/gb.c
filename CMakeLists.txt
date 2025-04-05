@@ -3,7 +3,6 @@ project(gbc VERSION 1.0.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file" FORCE)
 
 find_package(SDL3 CONFIG REQUIRED)
 if(NOT SDL3_FOUND)
