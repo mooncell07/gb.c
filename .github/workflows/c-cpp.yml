@@ -1,0 +1,48 @@
+name: Linux-Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+          submodules: recursive
+
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt install libltdl-dev libx11-dev libxft-dev libxext-dev
+        
+    - name: Install Clang
+      run: |
+       wget https://apt.llvm.org/llvm.sh
+       chmod +x ./llvm.sh
+       sudo ./llvm.sh 19
+       
+    - name: Install Dependencies
+      run: |
+        ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+        ./vcpkg/vcpkg install sdl3
+
+    - name: Build
+      run: |
+        mkdir build && cd build
+        cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
+          
+    - name: Upload Executable
+      uses: actions/upload-artifact@v4
+      with:
+        name: Linux Executable
+        path: './build/gbc'
