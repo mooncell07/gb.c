@@ -4,12 +4,10 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "logger.h"
-
 typedef struct {
     uint8_t colorCode;
-    bool palette1;
-    bool priority;
+    uint8_t palette1 : 1;
+    uint8_t priority : 1;
 } Pixel;
 
 typedef struct {
@@ -37,7 +35,7 @@ typedef struct {
     Sprite entries[10];
 } SpriteBuffer;
 
-#define _GETITEM(buffer) buffer->entries[buffer->base.head]
+#define _GETITEM(buffer) (buffer->entries[buffer->base.head])
 
 #define _popItem(buffer, container)                                            \
     if (buffer->base.ptr == 0) {                                               \
@@ -49,7 +47,7 @@ typedef struct {
     }
 
 #define _getItemAt(buffer, container, idx)                                     \
-    if (idx < 0 || idx >= buffer->base.maxSize) {                              \
+    if (idx < 0 || idx >= buffer->base.ptr) {                                  \
         logState(FATAL, "(_getItemAt) Index is out of bounds.");               \
     } else {                                                                   \
         container =                                                            \

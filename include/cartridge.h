@@ -3,13 +3,13 @@
 #include <stdint.h>
 
 typedef struct CartridgeHeaders {
-    char title[60];
-    char licensee[60];
-    char romType[60];
-    int romSize;
+    char title[16];
+    char licensee[8];
+    char romType[16];
     uint8_t romVersion;
     uint8_t destinationCode;
     uint8_t checksum;
+    int romSize;
 } CartridgeHeaders;
 
 typedef struct Cartridge {

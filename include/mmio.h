@@ -5,10 +5,10 @@
 #include "types.h"
 
 typedef struct {
+    uint16_t DIV;
 
     uint8_t SB;
     uint8_t SC;
-    uint16_t DIV;
     uint8_t TIMA;
     uint8_t TMA;
     uint8_t TAC;
@@ -29,11 +29,10 @@ typedef struct {
     uint8_t LX;
     uint8_t WLY;
 
-    bool booting;
-
     uint8_t IF;
     uint8_t IE;
 
+    bool booting;
 } MMIO;
 
 MMIO *createMMIO();

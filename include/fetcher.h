@@ -8,29 +8,29 @@
 
 typedef struct {
     MMIO *mmio;
-    uint8_t fetcherState;
-    uint8_t spriteState;
 
     uint16_t internalX;
-    uint8_t tileNum;
     uint16_t tileDataAddr;
+    uint16_t spriteDataAddr;
+
+    uint8_t fetcherState;
+    uint8_t spriteState;
+    uint8_t tileNum;
     uint8_t tileLo;
     uint8_t tileSlice[8];
+
+    uint8_t spriteLo;
+    uint8_t spriteSlice[8];
+    uint8_t staticLine;
 
     bool firstInstance;
     bool isWindowVisible;
     bool tickingSprite;
-    uint8_t staticLine;
 
-    uint16_t spriteDataAddr;
-    uint8_t spriteLo;
-    uint8_t spriteSlice[8];
     Sprite currSprite;
-
     PixelFIFO tFIFO;
     PixelFIFO sFIFO;
     SpriteBuffer sprites;
-
 } Fetcher;
 
 Fetcher *createFetcher(MMIO *);
