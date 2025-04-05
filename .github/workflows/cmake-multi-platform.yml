@@ -58,7 +58,7 @@ jobs:
 
     - name: Install Deps
       run: |
-        ./vcpkg/bootstrap-vcpkg.sh
+        ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
         ./vcpkg/vcpkg install
           
     - name: Configure CMake
