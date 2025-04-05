@@ -1,8 +1,9 @@
 #pragma once
 
+#include "logger.h"
+#include "types.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 
 typedef struct {
     uint8_t colorCode;

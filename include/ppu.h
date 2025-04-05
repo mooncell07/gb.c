@@ -4,6 +4,7 @@
 #include "mmio.h"
 #include "types.h"
 #include <stdint.h>
+#include <stdio.h>
 
 typedef struct {
     MMIO *mmio;
@@ -24,4 +25,3 @@ PPU *createPPU(MMIO *);
 void destroyPPU(PPU *);
 
 void ppuTick(PPU *);
-
