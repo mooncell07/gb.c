@@ -12,11 +12,11 @@ endif()
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*c")
 
 add_library(core STATIC ${SOURCE_FILES})
-target_link_libraries(core PRIVATE SDL3::SDL3)
+target_link_libraries(core PUBLIC SDL3::SDL3)
 target_include_directories(core PUBLIC include)
 
 add_executable(gbc main.c)
-target_link_libraries(gbc PRIVATE core)
+target_link_libraries(gbc PUBLIC core)
 
 
 if (CMAKE_BUILD_TYPE MATCHES Release)
