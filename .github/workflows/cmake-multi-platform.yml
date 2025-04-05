@@ -56,7 +56,12 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: Install Deps
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt install libltdl-dev
+
+    - name: Install Dependencies
       run: |
         ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
         ./vcpkg/vcpkg install
