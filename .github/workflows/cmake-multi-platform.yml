@@ -59,7 +59,7 @@ jobs:
     - name: Install System Dependencies
       run: |
         sudo apt-get update
-        sudo apt install libltdl-dev
+        sudo apt install libltdl-dev libx11-dev libxft-dev libxext-dev
 
     - name: Install Dependencies
       run: |
