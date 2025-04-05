@@ -19,12 +19,11 @@ jobs:
     - uses: actions/checkout@v4
       with:
           submodules: recursive
+    - uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: libltdl-dev libx11-dev libxft-dev libxext-dev
+        version: 1.0
 
-    - name: Install System Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt install libltdl-dev libx11-dev libxft-dev libxext-dev
-        
     - name: Install Clang
       run: |
        wget https://apt.llvm.org/llvm.sh
@@ -38,9 +37,8 @@ jobs:
 
     - name: Build
       run: |
-        mkdir build && cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake -S ${{ github.workspace }} ..
-        cmake --build .
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        make -C build
         
     - name: Upload Executable
       uses: actions/upload-artifact@v4
