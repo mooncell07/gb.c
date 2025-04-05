@@ -34,7 +34,7 @@ jobs:
     - name: Install Dependencies
       run: |
         ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
-        ./vcpkg/vcpkg install sdl3
+        ./vcpkg/vcpkg install
 
     - name: Build
       run: |
