@@ -1,8 +1,8 @@
 .vscode/
 .cache/
 build/
-tests/
-
+__pycache__/
 compile_commands.json
 vcpkg_installed/
 test-roms/
+

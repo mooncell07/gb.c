@@ -1,7 +1,7 @@
 {
-    "name": "gbc",
-    "description": "Gameboy Emulator",
-    "version-string": "1.0",
+    "name": "re-gb",
+    "description": "A Nintendo Gameboy Emulator.",
+    "version-string": "2.0",
     "dependencies": [
         "sdl3"
     ]

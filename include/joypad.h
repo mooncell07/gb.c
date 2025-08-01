@@ -4,9 +4,9 @@
 #include <stdint.h>
 
 typedef struct {
-    uint8_t P1;
-    uint8_t keyState;
-    uint8_t keyMask;
+  uint8_t P1;
+  uint8_t keyState;
+  uint8_t keyMask;
 } JoypadState;
 
 extern JoypadState js;

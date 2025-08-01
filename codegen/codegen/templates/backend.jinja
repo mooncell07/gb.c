@@ -1,0 +1,131 @@
+#define __AUTOGEN__
+
+// This file is auto generated, do not modify it manually.
+// All the changes go in `codegen` package and/or the `export.sh` script.
+
+#include <stdint.h>
+#include <sys/types.h>
+
+#include "backend.h"
+#include "utils.h"
+
+#define AFp self->regs.AF.pair
+#define BCp self->regs.BC.pair
+#define DEp self->regs.DE.pair
+#define HLp self->regs.HL.pair
+#define SP self->regs.SP
+#define PC self->regs.PC
+
+#define A self->regs.AF.hi
+#define F self->regs.AF.lo
+#define B self->regs.BC.hi
+#define C self->regs.BC.lo
+#define D self->regs.DE.hi
+#define E self->regs.DE.lo
+#define H self->regs.HL.hi
+#define L self->regs.HL.lo
+
+#define COPY_FLAG(v, pos) F = (F & ~(1 << pos)) | (((v) & 1) << pos)
+
+#define Cf(v) COPY_FLAG(v, ftC)
+#define Hf(v) COPY_FLAG(v, ftH)
+#define Nf(v) COPY_FLAG(v, ftN)
+#define Zf(v) COPY_FLAG(v, ftZ)
+
+#define getFlag(ft) BT(F, ft)
+
+static inline uint8_t next8(State *self) {
+  return read8(self->bus, PC++, true, true);
+}
+
+static inline uint16_t next16(State *self) {
+  uint8_t lo = next8(self);
+  uint8_t hi = next8(self);
+  return JOIN(hi, lo);
+}
+
+static inline uint16_t pop(State *self) {
+  uint8_t lo = read8(self->bus, SP++, true, true);
+  uint8_t hi = read8(self->bus, SP++, true, true);
+  return JOIN(hi, lo);
+}
+
+void push(State *self, uint16_t data) {
+  write8(self->bus, --SP, MSB(data), true);
+  write8(self->bus, --SP, LSB(data), true);
+}
+
+// --------------- OPCODE HANDLERS ---------------
+
+{{ slots.HANDLERS }}
+
+// --------------- Lookup Tables -----------------
+
+void attachPrefixed(Backend *self) {
+  fnptr *LUT = self->PREFIXED;
+  {{ slots.PREFIXED_LUT }}
+}
+
+void attachUnPrefixed(Backend *self) {
+  fnptr *LUT = self->UNPREFIXED;
+  {{ slots.UNPREFIXED_LUT }}
+}
+
+
+#undef AFp
+#undef BCp
+#undef DEp
+#undef HLp
+#undef SP
+#undef PC
+#undef A
+#undef F
+#undef B
+#undef C
+#undef D
+#undef E
+#undef H
+#undef L
+#undef COPY_FLAG
+#undef Cf
+#undef Hf
+#undef Nf
+#undef Zf
+#undef getFlag
+
+Backend createBackend(Bus *bus) {
+  Registers regs;
+  regs.AF.hi = 0x01;
+  regs.AF.lo = 0xB0;
+  regs.BC.hi = 0x00;
+  regs.BC.lo = 0x13;
+  regs.DE.hi = 0x00;
+  regs.DE.lo = 0xD8;
+  regs.HL.hi = 0x01;
+  regs.HL.lo = 0x4D;
+  regs.SP = 0xFFFE;
+  State state = {.bus = bus,
+                 .regs = regs,
+                 .opcode = 0x00,
+                 .halted = false,
+                 .IME = false,
+                 .IMERising = false};
+
+  Backend backend = {.state = state};
+  attachPrefixed(&backend);
+  attachUnPrefixed(&backend);
+  return backend;
+}
+
+void backendTick(Backend *self) {
+  self->state.opcode = next8(&self->state);
+  if (self->state.opcode == 0xCB) {
+    uint8_t next = next8(&self->state);
+    self->PREFIXED[next](&self->state);
+    
+  } else {
+  self->UNPREFIXED[self->state.opcode](&self->state);
+  }
+}
+
+

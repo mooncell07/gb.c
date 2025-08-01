@@ -3,18 +3,18 @@
 #include <stdint.h>
 
 typedef struct CartridgeHeaders {
-    char title[16];
-    char licensee[8];
-    char romType[16];
-    uint8_t romVersion;
-    uint8_t destinationCode;
-    uint8_t checksum;
-    int romSize;
+  char title[16];
+  char licensee[8];
+  char romType[16];
+  uint8_t romVersion;
+  uint8_t destinationCode;
+  uint8_t checksum;
+  int romSize;
 } CartridgeHeaders;
 
 typedef struct Cartridge {
-    CartridgeHeaders cartridgeHeaders;
-    Mapper mapper;
+  CartridgeHeaders cartridgeHeaders;
+  Mapper mapper;
 
 } Cartridge;
 

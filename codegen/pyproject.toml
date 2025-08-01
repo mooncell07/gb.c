@@ -1,0 +1,17 @@
+[project]
+name = "codegen"
+version = "0.1.0"
+description = "A Script for generating handlers for Gameboy CPU Instructions in C."
+authors = [
+    {name = "Nova",email = "mooncell07@proton.me"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "jinja2 (>=3.1.6,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

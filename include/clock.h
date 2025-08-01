@@ -3,8 +3,8 @@
 #include "ppu.h"
 
 typedef struct {
-    MMIO *mmio;
-    PPU *ppu;
+  MMIO *mmio;
+  PPU *ppu;
 } Clock;
 
 Clock *createClock(PPU *, MMIO *);

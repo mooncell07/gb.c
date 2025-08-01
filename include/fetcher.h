@@ -1,36 +1,37 @@
 #pragma once
 
-#include "fifo.h"
-#include "mmio.h"
 #include <SDL3/SDL.h>
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "fifo.h"
+#include "mmio.h"
+
 typedef struct {
-    MMIO *mmio;
+  MMIO *mmio;
 
-    uint16_t internalX;
-    uint16_t tileDataAddr;
-    uint16_t spriteDataAddr;
+  uint16_t internalX;
+  uint16_t tileDataAddr;
+  uint16_t spriteDataAddr;
 
-    uint8_t fetcherState;
-    uint8_t spriteState;
-    uint8_t tileNum;
-    uint8_t tileLo;
-    uint8_t tileSlice[8];
+  uint8_t fetcherState;
+  uint8_t spriteState;
+  uint8_t tileNum;
+  uint8_t tileLo;
+  uint8_t tileSlice[8];
 
-    uint8_t spriteLo;
-    uint8_t spriteSlice[8];
-    uint8_t staticLine;
+  uint8_t spriteLo;
+  uint8_t spriteSlice[8];
+  uint8_t staticLine;
 
-    bool firstInstance;
-    bool isWindowVisible;
-    bool tickingSprite;
+  bool firstInstance;
+  bool isWindowVisible;
+  bool tickingSprite;
 
-    Sprite currSprite;
-    PixelFIFO tFIFO;
-    PixelFIFO sFIFO;
-    SpriteBuffer sprites;
+  Sprite currSprite;
+  PixelFIFO tFIFO;
+  PixelFIFO sFIFO;
+  SpriteBuffer sprites;
 } Fetcher;
 
 Fetcher *createFetcher(MMIO *);

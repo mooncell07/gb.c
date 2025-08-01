@@ -1,7 +1,7 @@
-#include "fifo.h"
-
 #include <stdbool.h>
 #include <stdint.h>
+
+#include "fifo.h"
 
 Pixel EMPTYPIXEL = {0};
 Sprite EMPTYSPRITE = {0};

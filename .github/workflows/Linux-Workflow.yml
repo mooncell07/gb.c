@@ -39,11 +39,11 @@ jobs:
 
     - name: Build
       run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
-        cmake --build build
+        cmake --preset release
+        cmake --build --preset release
         
     - name: Upload Executable
       uses: actions/upload-artifact@v4
       with:
         name: Linux Executable
-        path: './build/gbc'
+        path: './build/release/reGB'

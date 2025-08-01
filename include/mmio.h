@@ -5,34 +5,34 @@
 #include "types.h"
 
 typedef struct {
-    uint16_t DIV;
+  uint16_t DIV;
 
-    uint8_t SB;
-    uint8_t SC;
-    uint8_t TIMA;
-    uint8_t TMA;
-    uint8_t TAC;
+  uint8_t SB;
+  uint8_t SC;
+  uint8_t TIMA;
+  uint8_t TMA;
+  uint8_t TAC;
 
-    uint8_t LCDC;
-    uint8_t STAT;
-    uint8_t SCY;
-    uint8_t SCX;
-    uint8_t LY;
-    uint8_t LYC;
-    uint8_t DMA;
-    uint8_t BGP;
-    uint8_t OBP0;
-    uint8_t OBP1;
-    uint8_t WY;
-    uint8_t WX;
+  uint8_t LCDC;
+  uint8_t STAT;
+  uint8_t SCY;
+  uint8_t SCX;
+  uint8_t LY;
+  uint8_t LYC;
+  uint8_t DMA;
+  uint8_t BGP;
+  uint8_t OBP0;
+  uint8_t OBP1;
+  uint8_t WY;
+  uint8_t WX;
 
-    uint8_t LX;
-    uint8_t WLY;
+  uint8_t LX;
+  uint8_t WLY;
 
-    uint8_t IF;
-    uint8_t IE;
+  uint8_t IF;
+  uint8_t IE;
 
-    bool booting;
+  bool booting;
 } MMIO;
 
 MMIO *createMMIO();

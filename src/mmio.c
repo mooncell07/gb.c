@@ -1,18 +1,17 @@
-#include "mmio.h"
-
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 
 #include "joypad.h"
+#include "mmio.h"
 #include "types.h"
 #include "utils.h"
 
 MMIO *createMMIO() {
-    MMIO *mmio = calloc(1, sizeof(MMIO));
-    mmio->booting = true;
-    return mmio;
+  MMIO *mmio = calloc(1, sizeof(MMIO));
+  if (mmio != NULL) { mmio->booting = true; }
+  return mmio;
 }
 
 void destroyMMIO(MMIO *self) { free(self); }
@@ -77,13 +76,13 @@ bool getLCDC(MMIO *self, LCDCType lct) { return BT(self->LCDC, lct); }
 bool getLCDS(MMIO *self, LCDSType lst) { return BT(self->STAT, lst); }
 
 uint16_t getTileMapBase(MMIO *self, bool isWin) {
-    bool flag =
-        isWin ? getLCDC(self, WINTILEMAPAREA) : getLCDC(self, BGTILEMAPAREA);
-    return flag ? 0x9C00 : 0x9800;
+  bool flag =
+      isWin ? getLCDC(self, WINTILEMAPAREA) : getLCDC(self, BGTILEMAPAREA);
+  return flag ? 0x9C00 : 0x9800;
 }
 
 uint16_t getTileDataBase(MMIO *self) {
-    return getLCDC(self, BGANDWINTILEDATAAREA) ? 0x8000 : 0x9000;
+  return getLCDC(self, BGANDWINTILEDATAAREA) ? 0x8000 : 0x9000;
 }
 
 void sendIntReq(MMIO *self, IntType ISR) { setBit(self->IF, ISR); }
