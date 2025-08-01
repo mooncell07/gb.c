@@ -5,9 +5,15 @@
 <img alt="Stargazers" src="https://img.shields.io/github/stars/mooncell07/reGB?style=for-the-badge&logo=starship&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41">
 <img alt="Issues" src="https://img.shields.io/github/issues/mooncell07/reGB?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
 <img alt="License" src="https://img.shields.io/github/license/mooncell07/reGB?style=for-the-badge&logo=github&color=F2CDCD&logoColor=D9E0EE&labelColor=302D41"/>
+<img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/mooncell07/reGB/Linux-Workflow.yml?style=for-the-badge&logo=githubactions&logoColor=D9E0EE&labelColor=302D41&color=a6e3a1"/>
 </h2>
 
-re:GB is a hobby Nintendo Gameboy Emulator in C.
+re:GB is a hobby Nintendo Gameboy Emulator in C. Currently, the emulator lacks quite a few vital features including sound, state saving capabilities and also only MBC1
+is supported as of now. I am working towards adding these features, especially audio. Anyways, to try it out follow the instructions below. Btw you would need to 
+supply your own legally acquired ROM. *re:GB does NOT supply Proprietary ROMS and will never do it in future too.*
+
+## Downloads
+- [Linux Executable](https://nightly.link/mooncell07/reGB/workflows/Linux-Workflow/master/Linux%20Executable.zip)
 
 ## Usage
 
