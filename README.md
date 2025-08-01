@@ -60,7 +60,7 @@ cmake --build --preset [release | debug | test]
 
 - Use `release` to generate a release build with optimizations.
 - Use `debug` to generate a debug build.
-- Use `test` to generate a shared lib, used for loading in a python script to run JSON Tests.
+- Use `test` to generate a shared object, used for loading in a python script to run JSON Tests.
 
 ## Autogen Instructions
 
