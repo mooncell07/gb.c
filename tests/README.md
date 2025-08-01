@@ -3,7 +3,7 @@
 We run the JSON Tests by loading the shared object in `runner.py` script and passing it the initial, final and cycles
 config from the sm83 JSON Tests.
 
-# Usage Instructions
+## Usage Instructions
 
 Run the following commands:
 
