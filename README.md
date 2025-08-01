@@ -64,4 +64,4 @@ cmake --build --preset [release | debug | test]
 
 ## Autogen Instructions
 
-This Emulator uses auto-generated CPU Instuction Handlers. [See More](./codegen/README.md).
+This Emulator uses auto-generated CPU Instruction Handlers. [See More](./codegen/README.md).

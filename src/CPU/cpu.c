@@ -53,7 +53,7 @@ void serviceIRQ(Backend *backend, uint8_t *intFlag, IntType intT) {
   backend->state.IME = false;
   backend->state.IMERising = false;
   clearBit(*intFlag, intT);
-  push(&backend->state, IVT[intT]);
+  push(&backend->state, backend->state.regs.PC);
   backend->state.regs.PC = IVT[intT];
 }
 
