@@ -24,6 +24,9 @@ Once you have the binary run:
 reGB [filepath]
 ```
 
+**NOTE**: You need a bootrom to run this emulator. Create a directory `roms` and put the `bootrom.gb` file there. If you don't have any then download the bootrom from this repo's `roms/` directory and put it in your local `roms/` directory.
+Both binary and `roms/` (with `bootrom.gb` file inside it) should be in same directory.
+
 ## Keyboard Mapping
 
 | Joypad Keys | Mapping     |
